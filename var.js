@@ -8,7 +8,7 @@ var record = {};
 var playerMoves = 0;
 var fileLocation = "", fileLocationShort = "";
 var containerHeight = 0, containerWidth = 0
-const greyboxURL = "file:///C:/Users/Kenne/Projects/Predatory/images/9.jpg";
+const greyboxURL = "images/greybox.jpg";
 
 function on() {
     document.getElementById("overlay").style.display = "block";
