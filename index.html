@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- <link rel="stylesheet" type="text/css" href="reset.css"> -->
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>Slide Puzzle</title>
+</head>
+<body>
+    <div id="overlay" >
+        <div id="text">Lets Play Slide Puzzle!!</div>
+        <form>
+            <input type="text" id="fname" name="fname" value="Kenneth">
+        </form>
+        <form>
+          <select id="difficulty" name="difficulty">
+            <option value="3">Easy Peasy</option>
+            <option value="5">Less Easy Peasy</option>
+            <option value="7">Wee Bit Challenging</option>
+            <option value="9">i got time</option>
+
+          </select>
+        </form>
+
+        <button id="splashScreenStart" onclick="off()">Start Game</button>
+    </div>
+
+
+    <div>
+        <h1 id="headline">Let's Play Slide Puzzle</h1>
+        <div id="containerOfBoxes"></div>
+        <div id="playerStatsContainer">
+        <div id="timer">
+            <h3>Time</h3>
+            <h3 id="time">00:00</h3>
+        </div>
+
+        <div id="level">
+            <h3>Level</h3>
+            <h3 id="levnum">3</h3>
+        </div>
+        <div id="moves">
+            <h3>No. of Moves</h3>
+            <h3 id="moveno">0</h3>
+        </div>
+        <!-- <button id="solveBut">Solve</div> -->
+    </div>
+    <script src="var.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+
