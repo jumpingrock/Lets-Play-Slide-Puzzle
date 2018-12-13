@@ -1,5 +1,6 @@
-//drawing of dynamic grid to house puzzle.
+
 function shuffle(array) {
+//the actual shuffling of number happen here. return array of number jumbled up.
   var currentIndex = array.length, temporaryValue, randomIndex;
   // While there remain elements to shuffle...
   while (0 !== currentIndex) {
@@ -13,36 +14,35 @@ function shuffle(array) {
   };
   return array;
 };
-
+//----------------------------------------------------
 var shuffleNo = function(){
+//append the correct number (gameDifficulty) to an array and sends it to shuffle function above
+//first game related function to be run
 
-    for (var i = 0; i<gameDifficulty*gameDifficulty;i++){
+    for (var i = 0; i<gridSize;i++){
         im.push(i+1);
     };
     im=shuffle(im);//this is to create an array that randomize numbers
     console.log(im)
 }
+//-----------------------------------------------------
 var newgame = function(){
-
+//
     gameDifficulty = parseInt(document.querySelector("#difficulty").value)
     if(gameDifficulty == 3){
-        fileLocation = "file:///C:/Users/Kenne/Projects/Predatory/images/9/";
-        fileLocationShort = "images/9/";
-        containerHeight = 9;
-        containerWidth = 3;
 
+        fileLocationShort = "images/9/";
+        containerHeight = 9; //CSS condition to properly size div tag containing tiles
+        containerWidth = 3; //CSS condition to properly size div tag containing tiles
     }else if(gameDifficulty == 5){
-        fileLocation = "file:///C:/Users/Kenne/Projects/Predatory/images/25/";
         fileLocationShort = "images/25/";
         containerHeight = 17;
         containerWidth = 4;
     }else if(gameDifficulty == 7){
-        fileLocation = "file:///C:/Users/Kenne/Projects/Predatory/images/49/";
         fileLocationShort = "images/49/";
         containerHeight = 26;
         containerWidth = 5;
     }else if(gameDifficulty == 10){
-        fileLocation = "file:///C:/Users/Kenne/Projects/Predatory/images/100/";
         fileLocationShort = "images/100/";
         containerHeight = 35;
         containerWidth = 6;
@@ -50,6 +50,7 @@ var newgame = function(){
 };//end of newgame
 
 var initGame = function() {
+//DOM init for grid and CSS
     var count =0;
     var containerOfBoxes = document.querySelector("#containerOfBoxes");
     // document.querySelector("#levnum").innerText = gameDifficulty;
@@ -58,7 +59,7 @@ var initGame = function() {
     for (var i = 0; i<gameDifficulty; i++){
         for(var j = 0; j<gameDifficulty; j++){
             //for loop to create boxes and append with image and style. Dynamic HTML CSS creation depending on difficulty.
-            var box = document.createElement('img')
+            var box = document.createElement('img') //creating of dom element for img
             box.className = "boxy";
             box.style.height = `${110}px`;
             box.style.width = `${110}px`;
@@ -68,31 +69,26 @@ var initGame = function() {
             containerOfBoxes.appendChild(box);
             box.setAttribute("id", i.toString()+j.toString());
             box.innerText = im[count];
-
     //for grey box puzzle if i is equal to last of grid then append image as grey box and give it a name of boogybox.
-
-            if(im[count] == (gameDifficulty*gameDifficulty)){ //create gray tile when random number load the biggest no.
+            if(im[count] == (gridSize)){ //create gray tile when random number load the biggest no.
                 console.log("9", gameDifficulty)
                 box.src= fileLocationShort+(im[count])+".jpg";
                 record = {id: i.toString()+j.toString(),
-                indx: im[count],
+                indx: im[count], //number corresponding to tiles actual position in original photo
                 greybox: "yes",
-                img: fileLocation+(im[count])+".jpg"};
+                img: fileLocationShort+(im[count])+".jpg"}; //appending relative file location to Matrix for record shifting later
             }else{ //creation of normal tile
                 box.src= fileLocationShort +(im[count])+".jpg";
                 record = {id: i.toString()+j.toString(),
                 indx: im[count],
                 greybox: "no",
-                img: fileLocation+(im[count])+".jpg"};
-
+                img: fileLocationShort+(im[count])+".jpg"};
             };//end of if else
-            Matrix.push(record);
+            Matrix.push(record); //pushing array into Matrix(array) to create 2D matrix
             count+=1;
         };// end of j loop
     };//end of i loop
-
-
-}; // end of window.onload function
+}; // end of Initgame function
 //---------------------------------------------------
 // Some random colors https://codepen.io/nashvail/details/wpGgXO
     const colors = ["#3CC157", "#2AA7FF", "#1B1B1B", "#FCBC0F", "#F85F36"];
@@ -135,16 +131,16 @@ var initGame = function() {
     });
 //-------------------------------------------------
 var isMovable = function() {
-
     var movingImg = "";
     var movingIndex = 0;
     for (var i = 0; i<Matrix.length;i++){//using this.innerText to check with matrix if it is within radius of greybox then switch
-        if(Matrix[i].greybox == "yes" && ((Matrix[i].id -this.id == 10) || (Matrix[i].id - this.id == -10))){
-            Matrix[i].img = this.src;
-            document.getElementById(`${Matrix[i].id}`).src = this.src;
-            this.src = greyboxURL;
+        if(Matrix[i].greybox == "yes" && ((Matrix[i].id -this.id === 10) || (Matrix[i].id - this.id === -10))){
+            //to check if this.id(clicked tile) is above or below gray tile
+            document.getElementById(`${Matrix[i].id}`).src = this.src;//switching destination to correct image
+            Matrix[i].img = this.src;//switching img to gray tile in matrix record
+            this.src = greyboxURL;//change clicked tile to gray tile
             for(var j = 0; j<Matrix.length;j++){
-                if(Matrix[j].id == this.id){
+                if(Matrix[j].id == this.id){ //moving of information within Matrix to reflect shift in img
                     Matrix[j].greybox = "yes";
                     Matrix[i].greybox = "no";
                     movingIndex = Matrix[i].indx;
@@ -153,14 +149,14 @@ var isMovable = function() {
                     movingImg = Matrix[i].img;
                     Matrix[i].img = Matrix[j].img;
                     Matrix[j].img = movingImg;
+                    moveCount();
                 };
             };
-        }else if(Matrix[i].greybox == "yes" && ((Matrix[i].id - this.id == 1) || (Matrix[i].id - this.id == -1))){
-            Matrix[i].img = this.src;
-            document.getElementById(`${Matrix[i].id}`).src = this.src;
-            this.src = greyboxURL;
-            moveCount();
-            winCheck();
+        }else if(Matrix[i].greybox == "yes" && ((Matrix[i].id - this.id === 1) || (Matrix[i].id - this.id === -1))){
+            //check if this.id (clicked tile) is to the right or left of gray tile
+            Matrix[i].img = this.src; //switching img to gray tile in matrix record
+            document.getElementById(`${Matrix[i].id}`).src = this.src; //switching destination to correct image
+            this.src = greyboxURL; //change clicked tile to gray tile
             for(var j = 0; j<Matrix.length;j++){
                 if(Matrix[j].id == this.id){
                     Matrix[j].greybox = "yes";
@@ -171,32 +167,30 @@ var isMovable = function() {
                     movingImg = Matrix[i].img;
                     Matrix[i].img = Matrix[j].img;
                     Matrix[j].img = movingImg;
+                    moveCount();
                 };//end of if updating of matrix
             };//and of for loop j
         };//end of is move legal if else
     };//end of first for loop
-    moveCount();
+
     winCheck();
 };//end of function isMovable
-
 //---------------------------------------------------------------
 var moveCount = function() {
-
     playerMoves+=1;
     document.querySelector("#moveno").innerText = playerMoves;
-}
+};
 //---------------------------------------------------------------
 var winCheck = function(){
-
+//win condition. obviously hardcoded will need working on.
     if (gameDifficulty == 3 && Matrix[0].indx == 1 && Matrix[1].indx == 2 && Matrix[2].indx == 3 && Matrix[3].indx == 4 && Matrix[4].indx == 5 & Matrix[5].indx == 6 && Matrix[6].indx == 7 && Matrix[7].indx == 8 && Matrix[8].indx == 9){
         alert("You Win!!");
     }else if (gameDifficulty == 5 && Matrix[0].indx == 1 && Matrix[1].indx == 2 && Matrix[2].indx == 3 && Matrix[3].indx == 4 && Matrix[4].indx == 5 & Matrix[5].indx == 6 && Matrix[6].indx == 7 && Matrix[7].indx == 8 && Matrix[8].indx == 9 && Matrix[9].indx == 10 && Matrix[10].indx == 11 && Matrix[11].indx == 12 && Matrix[12].indx == 13 && Matrix[13].indx == 14 & Matrix[14].indx == 15 && Matrix[15].indx == 16 && Matrix[16].indx == 17 && Matrix[17].indx == 18 && Matrix[18].indx == 19 && Matrix[19].indx == 20 && Matrix[20].indx == 21 && Matrix[21].indx == 22 && Matrix[22].indx == 23 & Matrix[23].indx == 24 && Matrix[24].indx == 25 ){
         alert("You Win!!");
     };
 };
-
 //----------------------------------------------------------------
-
+//Timer callback function for display
 var lapseTime = 0, dispTime = document.querySelector("#time"),lapseSec = 0, lapseMin = 0;
 interval = setInterval(function () {
     lapseSec = ("00"+lapseSec).substr(-2);

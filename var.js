@@ -1,7 +1,5 @@
 var playerName = "";//prompt("Enter your name: ", "Kenneth");
-// var gameDifficulty = prompt("Enter your games difficulty 1 - 3", 2);
-// gameDifficulty = (parseInt(gameDifficulty)**2)*2;
-var gameDifficulty = 0;//prompt("Select your difficulty", "5");
+var gameDifficulty = 0, gridSize = 0;//prompt("Select your difficulty", "5");
 var im = [];
 var Matrix = [];
 var record = {};
@@ -14,21 +12,20 @@ function on() {
     document.getElementById("overlay").style.display = "block";
 };
 
-function off() {
+function off() { // turn off overlay and send information into the required variables. first program to grab variables
     document.getElementById("overlay").style.display = "none";
     playerName = document.querySelector("#fname").value;
     gameDifficulty = document.querySelector("#difficulty").value;
+    gridSize = gameDifficulty*gameDifficulty;
     shuffleNo();
     newgame();
     initGame();
-
     var boxy = document.querySelectorAll(".boxy");
     for (var i=0; i<(gameDifficulty*gameDifficulty);i++){
         //listen for click on puzzle boxes and on click fire up gameGrid function.
         boxy[i].addEventListener("click", isMovable);
         console.log(boxy[i]);
     };//end of boxy click event for loop
-
 };
 on();
 
